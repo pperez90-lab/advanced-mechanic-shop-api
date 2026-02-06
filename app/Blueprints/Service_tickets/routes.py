@@ -16,7 +16,7 @@ def create_ticket():
         return jsonify({"errors": e.messages}), 400
     
     # Check if ticket already exists for this VIN
-    query = select(Tickets).where(Tickets.VIN == ticket_data['VIN'])
+    query = select(Tickets).where(Tickets.VIN == ticket_data.VIN)
     existing = db.session.execute(query).scalars().first()
     
     if existing:
