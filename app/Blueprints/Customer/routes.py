@@ -54,14 +54,38 @@ def create_customer():
     db.session.commit()
     return customer_schema.jsonify(new_customer), 201
 
-#GET all customers
+#GET all customers with pagination
 @customers_bp.route("/", methods=['GET'])
 @cache.cached(timeout=60)
 def get_customers():
-    query = select(Customer)
-    customers = db.session.execute(query).scalars().all()
+    # Get pagination parameters from query string (default: page 1, 10 per page)
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
     
-    return customers_schema.jsonify(customers)
+    # Use paginate method
+    pagination = db.paginate(
+        select(Customer),
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+    
+    customers = pagination.items
+    
+    # Return paginated response with metadata
+    return jsonify({
+        'customers': customers_schema.dump(customers),
+        'pagination': {
+            'page': pagination.page,
+            'per_page': pagination.per_page,
+            'total_pages': pagination.pages,
+            'total_items': pagination.total,
+            'has_next': pagination.has_next,
+            'has_prev': pagination.has_prev,
+            'next_page': pagination.next_num if pagination.has_next else None,
+            'prev_page': pagination.prev_num if pagination.has_prev else None
+        }
+    }), 200
 
 
 #GET Specific Customer
