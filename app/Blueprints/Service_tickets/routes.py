@@ -23,11 +23,10 @@ def create_ticket():
         return jsonify({"error": "A ticket already exists for this VIN."}), 400
     
     # Create new ticket
-    new_ticket = Tickets(**ticket_data)
-    db.session.add(new_ticket)
+    db.session.add(ticket_data)
     db.session.commit()
     
-    return ticket_schema.jsonify(new_ticket), 201
+    return ticket_schema.jsonify(ticket_data), 201
 
 
 #GET all Service Tickets
