@@ -74,15 +74,6 @@ def remove_mechanic(ticket_id, mechanic_id):
     db.session.commit()
     return ticket_schema.jsonify(ticket)
 
-
-@serviceTickets_bp.route('/my-tickets', methods=['GET'])
-@token_required
-def get_my_tickets(customer_id):
-    
-    query = select(Tickets).where(Tickets.customer_id == customer_id)
-    tickets = db.session.execute(query).scalars().all()
-    return tickets_schema.jsonify(tickets), 200
-
 # Add inventory part to a service ticket
 @serviceTickets_bp.route('/<int:ticket_id>/add-part/<int:inventory_id>', methods=['PUT'])
 def add_part_to_ticket(ticket_id, inventory_id):
