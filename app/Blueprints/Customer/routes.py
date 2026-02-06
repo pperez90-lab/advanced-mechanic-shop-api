@@ -1,13 +1,43 @@
-from .schemas import customer_schema, customers_schema
+from .schemas import customer_schema, customers_schema, login_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select
 from app.models import Customer, db
 from . import customers_bp
+from app.extensions import limiter, cache
+from app.utils.util import encode_token, token_required
+
+
+@customers_bp.route("/login", methods=['POST'])
+def login():
+    
+    try:
+        credentials = login_schema.load(request.json)
+        email = credentials['email']
+        password = credentials['password']
+    except ValidationError as e:
+        return jsonify(e.messages), 400
+    
+    query = select(Customer).where(Customer.email == email)
+    customer = db.session.execute(query).scalars().first()
+    
+    if customer and customer.password == password:
+        token = encode_token(customer.id)
+        
+        response = {
+            "status" : "success",
+            "message": "You have successfully been logged in.",
+            "token" : token            
+        }
+        
+        return jsonify(response), 200
+    else:
+        return jsonify({"message": "Invalid email or password!"})    
 
 
 #Create a Customer
 @customers_bp.route("/", methods=['POST'])
+@limiter.limit("5 per day")
 def create_customer():
     try:
         customer_data = customer_schema.load(request.json)
@@ -18,6 +48,7 @@ def create_customer():
     existing_customer = db.session.execute(query).scalars().all()
     if existing_customer:
         return jsonify({"error": "Email is already associated with an existing Customer."}), 400
+    
     new_customer = Customer(**customer_data)
     db.session.add(new_customer)
     db.session.commit()
@@ -25,6 +56,7 @@ def create_customer():
 
 #GET all customers
 @customers_bp.route("/", methods=['GET'])
+@cache.cached(timeout=60)
 def get_customers():
     query = select(Customer)
     customers = db.session.execute(query).scalars().all()
@@ -44,7 +76,9 @@ def get_customer(customer_id):
 
 #Upate specific user
 
-@customers_bp.route("/<int:customer_id>", methods=['PUT'])
+@customers_bp.route("/", methods=['PUT'])
+@limiter.limit("5 per month")
+@token_required
 def update_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
     
@@ -65,7 +99,9 @@ def update_customer(customer_id):
 
 #DELETE specific Member
 
-@customers_bp.route("/<int:customer_id>", methods=['DELETE'])
+@customers_bp.route("/", methods=['DELETE'])
+@token_required
+@limiter.limit("5 per day")
 def delete_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
     

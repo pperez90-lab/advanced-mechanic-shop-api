@@ -7,14 +7,21 @@ from . import serviceTickets_bp
 
 
 #Create a Service Ticket
-@serviceTickets_bp.route("/", methods=['POST'])
+@serviceTickets_bp.route("/service-tickets/", methods=["POST"])
 def create_ticket():
-    
-    new_ticket = ticket_schema.load(request.json)
-    
-    db.session.add(new_ticket)
+    data = request.get_json() or {}
+    try:
+        ticket = ticket_schema.load(data)
+    except ValidationError as e:
+        return jsonify({"errors": e.messages}), 400
+
+    existing = serviceTickets_bp.query.filter_by(VIN=ticket.VIN).first()
+    if existing:
+        return jsonify({"error": "A ticket already exists for this VIN."}), 400
+
+    db.session.add(ticket)
     db.session.commit()
-    return ticket_schema.jsonify(new_ticket), 201
+    return ticket_schema.jsonify(ticket), 201
 
 #GET all Service Tickets
 @serviceTickets_bp.route("/", methods=['GET'])
