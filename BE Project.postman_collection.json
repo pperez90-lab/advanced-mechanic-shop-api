@@ -1,353 +1,466 @@
 {
-	"info": {
-		"_postman_id": "f75a9241-a0c8-408f-98ac-d6ef7ee1b247",
-		"name": "BE Project",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "35374293"
-	},
-	"item": [
-		{
-			"name": "Members",
-			"item": [
-				{
-					"name": "Create Customer",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"peter2@example.com\",\r\n    \"name\": \"Peters\",\r\n    \"phone\": \"1234557890\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/customers",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"customers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET all Customers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/customers",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"customers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET customer by member id",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE Customer by ID",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Peter Perez\",\r\n    \"email\": \"peter.perez@snhu.edu\",\r\n    \"phone\": \"55555555\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:5000/customers/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"customers",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE a customer",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:5000/customers/2",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"customers",
-								"2"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Mechanic",
-			"item": [
-				{
-					"name": "Create new mechanic",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"mechanic@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"phone\": \"1234567890\",\r\n    \"salary\": \"5000\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:5000/mechanics",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"mechanics"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET All Mechanics",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:5000/mechanics",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"mechanics"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE Mechanic",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "    {\r\n    \"email\": \"mechanic@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"phone\": \"1234567890\",\r\n    \"salary\": 25000.0\r\n    }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:5000/mechanics/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"mechanics",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE Mechanic",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "    {\r\n    \"email\": \"mechanic@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"phone\": \"1234567890\",\r\n    \"salary\": 25000.0\r\n    }"
-						},
-						"url": {
-							"raw": "http://127.0.0.1:5000/mechanics/3",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"mechanics",
-								"3"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Service Tickets",
-			"item": [
-				{
-					"name": "NEW Ticket",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"VIN\" : \"ABCDEFGHIJKLMNOP\",\r\n    \"service_date\" : \"02/05/2026\",\r\n    \"service_desc\" : \"Oil Change\",\r\n    \"customer_id\": 1\r\n\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:5000/service-tickets",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"service-tickets"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET all tickets",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:5000/service-tickets",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"service-tickets"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Assign Mechanic",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:5000/service-tickets/1/assign-mechanic/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"service-tickets",
-								"1",
-								"assign-mechanic",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Remove Mechanic",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:5000/service-tickets/1/remove-mechanic/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "5000",
-							"path": [
-								"service-tickets",
-								"1",
-								"remove-mechanic",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"variable": [
-		{
-			"key": "baseURL",
-			"value": "",
-			"type": "default"
-		}
-	]
+  "info": {
+    "_postman_id": "f75a9241-a0c8-408f-98ac-d6ef7ee1b247",
+    "name": "BE Project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "35374293"
+  },
+  "item": [
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"peter2@example.com\",\r\n    \"name\": \"Peters\",\r\n    \"phone\": \"1234557890\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/customers",
+              "host": ["{{baseURL}}"],
+              "path": ["customers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET all Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/customers",
+              "host": ["{{baseURL}}"],
+              "path": ["customers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET customer by member id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/customers/1",
+              "host": ["{{baseURL}}"],
+              "path": ["customers", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE Customer by ID",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Peter Perez\",\r\n    \"email\": \"peter.perez@snhu.edu\",\r\n    \"phone\": \"55555555\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:5000/customers/1",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "5000",
+              "path": ["customers", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE a customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/customers/",
+              "host": ["{{baseURL}}"],
+              "path": ["customers", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Endpoint",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"peter@example.com\",\r\n    \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/customers/login",
+              "host": ["{{baseURL}}"],
+              "path": ["customers", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Mechanic",
+      "item": [
+        {
+          "name": "Create new mechanic",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"mechanic@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"phone\": \"1234567890\",\r\n    \"salary\": \"5000\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:5000/mechanics",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "5000",
+              "path": ["mechanics"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET All Mechanics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:5000/mechanics",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "5000",
+              "path": ["mechanics"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE Mechanic",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "    {\r\n    \"email\": \"mechanic@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"phone\": \"1234567890\",\r\n    \"salary\": 25000.0\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:5000/mechanics/1",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "5000",
+              "path": ["mechanics", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Mechanic",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "    {\r\n    \"email\": \"mechanic@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"phone\": \"1234567890\",\r\n    \"salary\": 25000.0\r\n    }"
+            },
+            "url": {
+              "raw": "{{baseURL}}/mechanics/3",
+              "host": ["{{baseURL}}"],
+              "path": ["mechanics", "3"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET mechanic by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/mechanics/1",
+              "host": ["{{baseURL}}"],
+              "path": ["mechanics", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get mechanics by ticket count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/mechanics/by-ticket-count",
+              "host": ["{{baseURL}}"],
+              "path": ["mechanics", "by-ticket-count"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Service Tickets",
+      "item": [
+        {
+          "name": "NEW Ticket",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"VIN\" : \"ABCDEFGHIJKLMNOP\",\r\n    \"service_date\" : \"02/05/2026\",\r\n    \"service_desc\" : \"Oil Change\",\r\n    \"customer_id\": 1\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:5000/service-tickets",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "5000",
+              "path": ["service-tickets"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET all tickets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/service-tickets",
+              "host": ["{{baseURL}}"],
+              "path": ["service-tickets"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Mechanic",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/service-tickets/1/assign-mechanic/1",
+              "host": ["{{baseURL}}"],
+              "path": ["service-tickets", "1", "assign-mechanic", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Mechanic",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:5000/service-tickets/1/remove-mechanic/1",
+              "protocol": "http",
+              "host": ["127", "0", "0", "1"],
+              "port": "5000",
+              "path": ["service-tickets", "1", "remove-mechanic", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get  my service tickets (token_required)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/service-tickets/my-tickets",
+              "host": ["{{baseURL}}"],
+              "path": ["service-tickets", "my-tickets"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add inventory part",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "GET all inventory",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Get inventory by item ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/inventory/1",
+              "host": ["{{baseURL}}"],
+              "path": ["inventory", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create inventory item",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Oil Filter\",\r\n  \"price\": 15.99\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/inventory/",
+              "host": ["{{baseURL}}"],
+              "path": ["inventory", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE inventory item",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Premium Oil Filter\",\r\n  \"price\": 19.99\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/inventory/1",
+              "host": ["{{baseURL}}"],
+              "path": ["inventory", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete inventory item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Premium Oil Filter\",\r\n  \"price\": 19.99\r\n}\r\n"
+            },
+            "url": {
+              "raw": "{{baseURL}}/inventory/1",
+              "host": ["{{baseURL}}"],
+              "path": ["inventory", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "const data = pm.response.json();\r",
+          "if (data.token) {\r",
+          "  pm.collectionVariables.set(\"token\", data.token);\r",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
 }
