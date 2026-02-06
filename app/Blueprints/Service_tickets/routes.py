@@ -8,7 +8,7 @@ from app.utils.util import token_required
 
 
 #Create a Service Ticket
-@serviceTickets_bp.route("/service-tickets/", methods=["POST"])
+@serviceTickets_bp.route("/", methods=["POST"])
 def create_ticket():
     try:
         ticket_data = ticket_schema.load(request.json)
