@@ -19,12 +19,14 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     }
 )
 
-def create_app(config_name="DevelopmentConfig"):
+def create_app(config_name="ProductionConfig"):
     app = Flask(__name__)
-    from config import DevelopmentConfig, TestingConfig
+    from config import DevelopmentConfig, TestingConfig, ProductionConfig
 
     if config_name == "TestingConfig":
         app.config.from_object(TestingConfig)
+    elif config_name == "ProductionConfig":
+        app.config.from_object(ProductionConfig)
     else:
         app.config.from_object(DevelopmentConfig)
     
