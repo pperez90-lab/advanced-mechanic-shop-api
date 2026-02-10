@@ -1,4 +1,7 @@
 advanced-mechanic-shop-api/
+├── .github/
+│   └── workflows/
+│       └── main.yaml
 ├── app/
 │   ├── Blueprints/
 │   │   ├── Customer/
