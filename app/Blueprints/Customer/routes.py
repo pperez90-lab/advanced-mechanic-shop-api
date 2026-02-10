@@ -100,9 +100,11 @@ def get_customer(customer_id):
 
 @customers_bp.route("/", methods=['PUT'])
 @token_required
+@token_required 
 @limiter.limit("5 per month")
 
 def update_customer(customer_id):
+
     customer = db.session.get(Customer, customer_id)
     
     if not customer:

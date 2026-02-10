@@ -18,5 +18,6 @@ class TestingConfig(Config):
     SECRET_KEY = 'testing-secret-key'
 
 class ProductionConfig(Config):
-    """Production configuration."""
-    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    CACHE_TYPE = "SimpleCache"
+   
