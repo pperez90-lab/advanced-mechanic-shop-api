@@ -1,12 +1,39 @@
-/project
-├── /application
-│   ├── __init__.py - create_app() lives here
+advanced-mechanic-shop-api/
+├── app/
+│   ├── Blueprints/
+│   │   ├── Customer/
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py
+│   │   │   └── schemas.py
+│   │   ├── Inventory/
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py
+│   │   │   └── schemas.py
+│   │   ├── Mechanics/
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py
+│   │   │   └── schemas.py
+│   │   └── Service_tickets/
+│   │       ├── __init__.py
+│   │       ├── routes.py
+│   │       └── schemas.py
+│   ├── __pycache__/
+│   ├── static/
+│   │   └── swagger.yaml
+│   ├── utils/
+│   │   └── util.py
+│   ├── __init__.py
 │   ├── extensions.py
-│   ├── /blueprints
-│		│		├──/user
-│		│				├──__init__.py  - Initializt User Blueprint
-│		│				├── routes.py  - Create User Controllers/routes
-│		│				└── userSchemas.py
 │   └── models.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_customers.py
+│   ├── test_inventory.py
+│   ├── test_mechanics.py
+│   └── test_service_tickets.py
+├── .gitignore
+├── BE Project.postman_collection.json
+├── README.md
 ├── app.py
-└── config.py
+├── filestructure.txt
+└── requirements.txt
