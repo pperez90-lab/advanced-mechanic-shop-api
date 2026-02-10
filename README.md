@@ -14,6 +14,7 @@ A comprehensive RESTful API built with Flask for managing mechanic shop operatio
 - [API Endpoints](#api-endpoints)
 - [Authentication](#authentication)
 - [Usage Examples](#usage-examples)
+- [Testing](#testing)
 - [Contributing](#contributing)
 
 ## ✨ Features
@@ -75,6 +76,9 @@ mechanic-shop-api/
 │   │       ├── __init__.py
 │   │       ├── routes.py       # Inventory CRUD operations
 │   │       └── schemas.py
+│   ├── __pycache__/
+│   ├── static/
+│   │   └── swagger.yaml                    # Swagger/OpenAPI documentation
 │   ├── utils/
 │   │   └── util.py             # encode_token, token_required decorator
 │   ├── __init__.py             # Application factory + extensions initialization
@@ -83,6 +87,12 @@ mechanic-shop-api/
 ├── app.py                      # Application entry point
 ├── config.py                   # Configuration settings
 └── requirements.txt            # Python dependencies
+├── tests/
+│   ├── __init__.py
+│   ├── test_customers.py
+│   ├── test_inventory.py
+│   ├── test_mechanics.py
+│   └── test_service_tickets.py
 ```
 
 ## 🚀 Installation
@@ -342,6 +352,37 @@ curl http://127.0.0.1:5000/mechanics/by-ticket-count
 curl "http://127.0.0.1:5000/customers/?page=1&per_page=10"
 ```
 
+
+## 🧪 Testing
+
+This project includes comprehensive unit tests for all major components.
+
+### Running Tests
+
+To run the test suite:
+
+```bash
+python -m pytest tests/
+```
+
+Run tests with coverage:
+
+```bash
+python -m pytest tests/ --cov=app --cov-report=html
+```
+
+### Test Files
+
+- `test_customers.py` - Customer CRUD operations and authentication tests
+- `test_mechanics.py` - Mechanic management tests
+- `test_inventory.py` - Inventory CRUD tests
+- `test_service_tickets.py` - Service ticket and many-to-many relationship tests
+
+### API Documentation
+
+Swagger/OpenAPI documentation is available at:
+- File: `app/static/swagger.yaml`
+- Access it by serving the static folder or importing into Swagger UI
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
