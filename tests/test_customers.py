@@ -73,7 +73,7 @@ class TestCustomers(unittest.TestCase):
             "password": "badpw"
         }
         response = self.client.post("/customers/login", json=credentials)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json.get("message"), "Invalid email or password!")
 
     def test_update_customer_with_token(self):
