@@ -73,8 +73,6 @@ class TestCustomers(unittest.TestCase):
             "password": "badpw"
         }
         response = self.client.post("/customers/login", json=credentials)
-        # your code: return jsonify({"message": "Invalid email or password!"})
-        # no status set → 200
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json.get("message"), "Invalid email or password!")
 
