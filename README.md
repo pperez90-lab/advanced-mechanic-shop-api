@@ -1,6 +1,6 @@
 # Mechanic Shop API
 
-A RESTful API built with Flask for managing mechanic shop operations, including customer management, mechanic records, and service ticket tracking with many-to-many relationships.
+A comprehensive RESTful API built with Flask for managing mechanic shop operations, featuring advanced capabilities including token authentication, rate limiting, caching, customer management, mechanic records, service ticket tracking, inventory management, and complex many-to-many relationships.
 
 ## 📋 Table of Contents
 
@@ -12,18 +12,35 @@ A RESTful API built with Flask for managing mechanic shop operations, including 
 - [Database Setup](#database-setup)
 - [Running the Application](#running-the-application)
 - [API Endpoints](#api-endpoints)
+- [Authentication](#authentication)
 - [Usage Examples](#usage-examples)
 - [Contributing](#contributing)
 
 ## ✨ Features
 
-- **Customer Management**: Full CRUD operations for customer records
+### Core Features
+- **Customer Management**: Full CRUD operations for customer records with pagination support
 - **Mechanic Management**: Full CRUD operations for mechanic profiles with salary tracking
 - **Service Tickets**: Create and manage service tickets with VIN tracking
-- **Many-to-Many Relationships**: Assign multiple mechanics to service tickets
-- **Data Validation**: Marshmallow schemas for request/response validation
+- **Inventory Management**: Complete CRUD operations for auto parts and inventory items
+- **Many-to-Many Relationships**: 
+  - Assign multiple mechanics to service tickets
+  - Link multiple inventory parts to service tickets
+- **Data Validation**: Marshmallow schemas for comprehensive request/response validation
 - **Application Factory Pattern**: Modular and scalable Flask application architecture
 - **Blueprint Organization**: Cleanly separated API routes by resource type
+
+### Advanced Features
+- **🔐 Token Authentication**: JWT-based authentication using `encode_token()` and `@token_required` decorator
+- **🔒 Login System**: Secure customer login with email/password validation using dedicated `login_schema`
+- **⚡ Rate Limiting**: Flask-Limiter integration to prevent API abuse (5 requests per day for customer creation, 5 per month for updates)
+- **💾 Caching**: Flask-Caching with 60-second timeout for frequently accessed endpoints
+- **📄 Pagination**: Query parameter-based pagination on GET /customers endpoint (default: 10 per page)
+- **🎯 Advanced Queries**: 
+  - `/mechanics/by-ticket-count` - Mechanics ordered by number of tickets worked (DESC)
+  - Dynamic mechanic assignment/removal from tickets
+  - Inventory part linking to service tickets
+- **🎫 My Tickets Route**: Token-protected `/my-tickets` endpoint for authenticated customers to view their service tickets
 
 ## 🛠️ Tech Stack
 
@@ -31,6 +48,9 @@ A RESTful API built with Flask for managing mechanic shop operations, including 
 - **ORM**: SQLAlchemy 2.0.46 with Flask-SQLAlchemy 3.1.1
 - **Serialization**: Marshmallow 4.2.1 with Flask-Marshmallow 1.3.0 and marshmallow-sqlalchemy 1.4.2
 - **Database**: MySQL (mysql-connector-python 9.5.0)
+- **Rate Limiting**: Flask-Limiter 4.1.1
+- **Caching**: Flask-Caching 2.3.1
+- **Authentication**: PyJWT 2.11.0
 - **Server**: Werkzeug 3.1.5
 
 ## 📁 Project Structure
@@ -41,23 +61,28 @@ mechanic-shop-api/
 │   ├── Blueprints/
 │   │   ├── Customer/
 │   │   │   ├── __init__.py
-│   │   │   ├── routes.py
-│   │   │   └── schemas.py
+│   │   │   ├── routes.py       # Customer endpoints + login + my-tickets
+│   │   │   └── schemas.py      # customer_schema, customers_schema, login_schema
 │   │   ├── Mechanics/
 │   │   │   ├── __init__.py
-│   │   │   ├── routes.py
+│   │   │   ├── routes.py       # Mechanic endpoints + by-ticket-count query
 │   │   │   └── schemas.py
-│   │   └── Service_tickets/
+│   │   ├── Service_tickets/
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py       # Service ticket endpoints + mechanic/part assignment
+│   │   │   └── schemas.py
+│   │   └── Inventory/
 │   │       ├── __init__.py
-│   │       ├── routes.py
+│   │       ├── routes.py       # Inventory CRUD operations
 │   │       └── schemas.py
-│   ├── __init__.py
-│   ├── extensions.py
-│   └── models.py
-├── app.py
-├── config.py
-├── requirements.txt
-└── README.md
+│   ├── utils/
+│   │   └── util.py             # encode_token, token_required decorator
+│   ├── __init__.py             # Application factory + extensions initialization
+│   ├── models.py               # Database models with many-to-many relationships
+│   └── extensions.py           # Extensions (db, ma, limiter, cache)
+├── app.py                      # Application entry point
+├── config.py                   # Configuration settings
+└── requirements.txt            # Python dependencies
 ```
 
 ## 🚀 Installation
@@ -73,8 +98,8 @@ mechanic-shop-api/
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/pperez90-lab/mechanic-shop-api.git
-cd mechanic-shop-api
+git clone https://github.com/pperez90-lab/advanced-mechanic-shop-api.git
+cd advanced-mechanic-shop-api
 ```
 
 2. **Create a virtual environment**
@@ -85,11 +110,12 @@ python -m venv venv
 
 3. **Activate the virtual environment**
 
-- Windows:
+- **Windows:**
   ```bash
   venv\Scripts\activate
   ```
-- macOS/Linux:
+
+- **macOS/Linux:**
   ```bash
   source venv/bin/activate
   ```
@@ -108,6 +134,7 @@ Create a `config.py` file in the root directory with your database configuration
 class Config:
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://username:password@localhost/database_name'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = 'your-secret-key-here'  # Required for JWT token encoding
 
 class DevelopmentConfig(Config):
     DEBUG = True
@@ -116,7 +143,7 @@ class ProductionConfig(Config):
     DEBUG = False
 ```
 
-**Important**: Replace `username`, `password`, and `database_name` with your MySQL credentials.
+**Important**: Replace `username`, `password`, and `database_name` with your MySQL credentials. Set a strong `SECRET_KEY` for production use.
 
 ## 🗄️ Database Setup
 
@@ -152,15 +179,44 @@ The API will be available at `http://127.0.0.1:5000`
 
 ## 📚 API Endpoints
 
+### Authentication
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/customers/login` | Customer login - returns JWT token | No |
+
+**Request Body** (login_schema):
+```json
+{
+  "email": "customer@example.com",
+  "password": "password123"
+}
+```
+
+**Response**:
+```json
+{
+  "status": "success",
+  "message": "You have successfully been logged in.",
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+}
+```
+
 ### Customers
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/customers/` | Create a new customer |
-| GET | `/customers/` | Get all customers |
-| GET | `/customers/<id>` | Get a specific customer |
-| PUT | `/customers/<id>` | Update a customer |
-| DELETE | `/customers/<id>` | Delete a customer |
+| Method | Endpoint | Description | Rate Limit | Cache | Auth |
+|--------|----------|-------------|------------|-------|------|
+| POST | `/customers/` | Create a new customer | 5/day | No | No |
+| GET | `/customers/` | Get all customers (paginated) | No | 60s | No |
+| GET | `/customers/<id>` | Get a specific customer | No | No | No |
+| PUT | `/customers/` | Update authenticated customer | 5/month | No | Yes |
+| DELETE | `/customers/` | Delete authenticated customer | 5/day | No | Yes |
+
+**Pagination Parameters** (GET `/customers/`):
+- `page` - Page number (default: 1)
+- `per_page` - Items per page (default: 10)
+
+Example: `GET /customers/?page=2&per_page=20`
 
 ### Mechanics
 
@@ -171,15 +227,50 @@ The API will be available at `http://127.0.0.1:5000`
 | GET | `/mechanics/<id>` | Get a specific mechanic |
 | PUT | `/mechanics/<id>` | Update a mechanic |
 | DELETE | `/mechanics/<id>` | Delete a mechanic |
+| **GET** | **`/mechanics/by-ticket-count`** | **Get mechanics ordered by tickets worked (advanced query)** |
 
 ### Service Tickets
 
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/service-tickets/` | Create a new service ticket | No |
+| GET | `/service-tickets/` | Get all service tickets | No |
+| **GET** | **`/service-tickets/my-tickets`** | **Get tickets for authenticated customer** | **Yes (Token)** |
+| PUT | `/service-tickets/<ticket_id>/assign-mechanic/<mechanic_id>` | Assign a mechanic to a ticket | No |
+| PUT | `/service-tickets/<ticket_id>/remove-mechanic/<mechanic_id>` | Remove a mechanic from a ticket | No |
+| PUT | `/service-tickets/<ticket_id>/add-part/<inventory_id>` | Add inventory part to ticket | No |
+
+### Inventory
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/service-tickets/` | Create a new service ticket |
-| GET | `/service-tickets/` | Get all service tickets |
-| PUT | `/service-tickets/<ticket_id>/assign-mechanic/<mechanic_id>` | Assign a mechanic to a ticket |
-| PUT | `/service-tickets/<ticket_id>/remove-mechanic/<mechanic_id>` | Remove a mechanic from a ticket |
+| POST | `/inventory/` | Create a new inventory item |
+| GET | `/inventory/` | Get all inventory items |
+| GET | `/inventory/<id>` | Get a specific inventory item |
+| PUT | `/inventory/<id>` | Update an inventory item |
+| DELETE | `/inventory/<id>` | Delete an inventory item |
+
+## 🔐 Authentication
+
+### How to Use Token Authentication
+
+1. **Login to get a token**:
+   ```bash
+   curl -X POST http://127.0.0.1:5000/customers/login \
+     -H "Content-Type: application/json" \
+     -d '{"email": "customer@example.com", "password": "password123"}'
+   ```
+
+2. **Use the token in protected endpoints**:
+   ```bash
+   curl -X GET http://127.0.0.1:5000/service-tickets/my-tickets \
+     -H "Authorization: Bearer YOUR_TOKEN_HERE"
+   ```
+
+### Protected Endpoints
+- `GET /service-tickets/my-tickets` - View your service tickets
+- `PUT /customers/` - Update your profile
+- `DELETE /customers/` - Delete your account
 
 ## 💡 Usage Examples
 
@@ -191,7 +282,19 @@ curl -X POST http://127.0.0.1:5000/customers/ \
   -d '{
     "name": "John Doe",
     "email": "john@example.com",
-    "phone": "555-0123"
+    "phone": "555-0123",
+    "password": "securepass123"
+  }'
+```
+
+### Login and Get Token
+
+```bash
+curl -X POST http://127.0.0.1:5000/customers/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john@example.com",
+    "password": "securepass123"
   }'
 ```
 
@@ -208,16 +311,35 @@ curl -X POST http://127.0.0.1:5000/service-tickets/ \
   }'
 ```
 
+### Get My Tickets (Authenticated)
+
+```bash
+curl -X GET http://127.0.0.1:5000/service-tickets/my-tickets \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
 ### Assign a Mechanic to a Ticket
 
 ```bash
 curl -X PUT http://127.0.0.1:5000/service-tickets/1/assign-mechanic/1
 ```
 
-### Get All Customers
+### Add Inventory Part to Ticket
 
 ```bash
-curl http://127.0.0.1:5000/customers/
+curl -X PUT http://127.0.0.1:5000/service-tickets/1/add-part/5
+```
+
+### Get Mechanics by Ticket Count (Advanced Query)
+
+```bash
+curl http://127.0.0.1:5000/mechanics/by-ticket-count
+```
+
+### Get Paginated Customers
+
+```bash
+curl "http://127.0.0.1:5000/customers/?page=1&per_page=10"
 ```
 
 ## 🤝 Contributing
@@ -241,4 +363,4 @@ This project is open source and available for educational purposes.
 
 ---
 
-Built with ❤️ using Flask and SQLAlchemy
+Built with ❤️ using Flask, SQLAlchemy, and advanced API development practices
