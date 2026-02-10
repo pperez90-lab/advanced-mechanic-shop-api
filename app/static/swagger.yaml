@@ -4,9 +4,9 @@ info:
   description: "A comprehensive RESTful API built with Flask for managing mechanic shop operations, featuring token authentication, rate limiting, caching, customer management, mechanic records, service ticket tracking, and inventory management."
   version: "1.0.0"
 
-host: "127.0.0.1:5000"
+host: "advanced-mechanic-shop-api.onrender.com"
 schemes:
-  - "http"
+  - "https"
 consumes:
   - "application/json"
 produces:
