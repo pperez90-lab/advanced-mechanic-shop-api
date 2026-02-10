@@ -5,10 +5,28 @@ from .Blueprints.Customer import customers_bp
 from .Blueprints.Mechanics import mechanics_bp
 from .Blueprints.Service_tickets import serviceTickets_bp
 from .Blueprints.Inventory import inventory_bp
+from flask_swagger_ui import get_swaggerui_blueprint
 
-def create_app(config_name):
+
+SWAGGER_URL = '/api/docs'
+API_URL = '/static/swagger.yaml'
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Mechanic Shop API"
+    }
+)
+
+def create_app(config_name="DevelopmentConfig"):
     app = Flask(__name__)
-    app.config.from_object(f'config.{config_name}')
+    from config import DevelopmentConfig, TestingConfig
+
+    if config_name == "TestingConfig":
+        app.config.from_object(TestingConfig)
+    else:
+        app.config.from_object(DevelopmentConfig)
     
     #Initialize extensions
     ma.init_app(app)
@@ -21,5 +39,6 @@ def create_app(config_name):
     app.register_blueprint(mechanics_bp, url_prefix='/mechanics')
     app.register_blueprint(serviceTickets_bp, url_prefix='/service-tickets')
     app.register_blueprint(inventory_bp,url_prefix='/inventory')
+    app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL) #Registering our swagger blueprint
     
     return app

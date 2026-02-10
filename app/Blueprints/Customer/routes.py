@@ -10,29 +10,27 @@ from app.utils.util import encode_token, token_required
 
 @customers_bp.route("/login", methods=['POST'])
 def login():
-    
     try:
         credentials = login_schema.load(request.json)
         email = credentials['email']
         password = credentials['password']
     except ValidationError as e:
         return jsonify(e.messages), 400
-    
+
     query = select(Customer).where(Customer.email == email)
     customer = db.session.execute(query).scalars().first()
-    
+
     if customer and customer.password == password:
         token = encode_token(customer.id)
-        
         response = {
-            "status" : "success",
+            "status": "success",
             "message": "You have successfully been logged in.",
-            "token" : token            
+            "token": token
         }
-        
         return jsonify(response), 200
     else:
-        return jsonify({"message": "Invalid email or password!"})    
+        return jsonify({"message": "Invalid email or password!"}), 400
+ 
 
 
 #Create a Customer
@@ -107,7 +105,7 @@ def update_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
     
     if not customer:
-        return jsonify({"error": "Customer not found."})
+        return jsonify({"error": "Customer not found."}),400
     
     try:
         customer_data = customer_schema.load(request.json)
@@ -121,17 +119,19 @@ def update_customer(customer_id):
     return customer_schema.jsonify(customer), 200
 
 
-#DELETE specific Member
+#DELETE specific Customer
 
 @customers_bp.route("/", methods=['DELETE'])
 @token_required
 @limiter.limit("5 per day")
 def delete_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
-    
+
     if not customer:
         return jsonify({"error": "Could not find customer."}), 404
-    
+
     db.session.delete(customer)
     db.session.commit()
-    return jsonify({"Customer": f'Customer id: {customer_id}, successfully deleted.'}), 200  
+    return jsonify(
+        {"Customer": f'Customer id: {customer_id}, successfully deleted.'}
+    ), 200
