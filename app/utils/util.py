@@ -23,15 +23,23 @@ def token_required(f):
             token = request.headers['Authorization'].split()[1]
         
         if not token:
+            print("DEBUG: No token found in request")  # ADD THIS
             return jsonify({'message': 'Missing token'}), 401
         
         try:
+            print(f"DEBUG: Attempting to decode token with SECRET_KEY: {SECRET_KEY[:10]}...")  # ADD THIS
             data = jwt.decode(token, SECRET_KEY, algorithms='HS256')
             customer_id = data['sub']
-        except jwt.ExpiredSignatureError:
+            print(f"DEBUG: Successfully decoded token for customer_id: {customer_id}")  # ADD THIS
+        except jwt.ExpiredSignatureError as e:
+            print(f"DEBUG: Token expired: {e}")  # ADD THIS
             return jsonify({'message': 'token expired'}), 401
-        except jwt.InvalidTokenError:
+        except jwt.InvalidTokenError as e:
+            print(f"DEBUG: Invalid token: {e}")  # ADD THIS
             return jsonify({'message': 'Invalid token'}), 401
+        except Exception as e:
+            print(f"DEBUG: Unexpected error: {type(e).__name__}: {e}")  # ADD THIS
+            return jsonify({'message': 'Token validation error'}), 401
         
         return f(customer_id, *args, **kwargs)
     
