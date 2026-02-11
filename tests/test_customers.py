@@ -85,18 +85,15 @@ class TestCustomers(unittest.TestCase):
             "phone": "123-456-7890",
             "password": "seedpw"
         }
-        # matches @customers_bp.route("/", methods=['PUT'])
-        response = self.client.put("/customers/", json=payload, headers=headers)
-        # NOTE: because route signature is def update_customer(customer_id),
-        # this may still error at runtime until routes.py is fixed.
+        # matches @customers_bp.route("/<int:customer_id>", methods=['PUT'])
+        response = self.client.put(f"/customers/{self.customer_id}", json=payload, headers=headers)
         self.assertEqual(response.status_code, 200)
 
     def test_delete_customer_with_token(self):
         token = self._login_and_get_token()
         headers = {"Authorization": f"Bearer {token}"}
-        # matches @customers_bp.route("/", methods=['DELETE'])
-        response = self.client.delete("/customers/", headers=headers)
-        # same note: route expects customer_id argument even though URL has none.
+        # matches @customers_bp.route("/<int:customer_id>", methods=['DELETE'])
+        response = self.client.delete(f"/customers/{self.customer_id}", headers=headers)
         self.assertEqual(response.status_code, 200)
 
 
