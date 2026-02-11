@@ -1,13 +1,10 @@
 import jwt
 from datetime import datetime, timezone, timedelta
 from functools import wraps
-from flask import request, jsonify
-import os
-
-
-SECRET_KEY = os.environ.get('SECRET_KEY') or "super_secret_secrets_key_1234567890"
+from flask import request, jsonify, current_app
 
 def encode_token(customer_id):
+    SECRET_KEY = current_app.config['SECRET_KEY']
     payload = {
         'exp': datetime.now(timezone.utc) + timedelta(days=0, hours=1),
         'iat': datetime.now(timezone.utc),
@@ -17,29 +14,25 @@ def encode_token(customer_id):
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     return token
 
-
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
+        SECRET_KEY = current_app.config['SECRET_KEY']
         token = None
-
         if 'Authorization' in request.headers:
             token = request.headers['Authorization'].split()[1]
-
+        
         if not token:
             return jsonify({'message': 'Missing token'}), 401
-
+        
         try:
             data = jwt.decode(token, SECRET_KEY, algorithms='HS256')
             customer_id = data['sub']
-
         except jwt.ExpiredSignatureError:
             return jsonify({'message': 'token expired'}), 401
         except jwt.InvalidTokenError:
             return jsonify({'message': 'Invalid token'}), 401
-
-        # pass customer_id into the route function
+        
         return f(customer_id, *args, **kwargs)
-
+    
     return decorated
-
