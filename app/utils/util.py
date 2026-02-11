@@ -8,11 +8,12 @@ def encode_token(customer_id):
     payload = {
         'exp': datetime.now(timezone.utc) + timedelta(days=0, hours=1),
         'iat': datetime.now(timezone.utc),
-        'sub': customer_id
+        'sub': str(customer_id)  
     }
     
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     return token
+
 
 def token_required(f):
     @wraps(f)
@@ -27,10 +28,11 @@ def token_required(f):
             return jsonify({'message': 'Missing token'}), 401
         
         try:
-            print(f"DEBUG: Attempting to decode token with SECRET_KEY: {SECRET_KEY[:10]}...")  # ADD THIS
+            print(f"DEBUG: Attempting to decode token with SECRET_KEY: {SECRET_KEY[:10]}...")
             data = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-            customer_id = data['sub']
-            print(f"DEBUG: Successfully decoded token for customer_id: {customer_id}")  # ADD THIS
+            customer_id = int(data['sub'])  # Convert back to integer
+            print(f"DEBUG: Successfully decoded token for customer_id: {customer_id}")
+
         except jwt.ExpiredSignatureError as e:
             print(f"DEBUG: Token expired: {e}")  # ADD THIS
             return jsonify({'message': 'token expired'}), 401
