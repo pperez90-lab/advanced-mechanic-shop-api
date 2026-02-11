@@ -86,14 +86,14 @@ class TestCustomers(unittest.TestCase):
             "password": "seedpw"
         }
         # matches @customers_bp.route("/<int:customer_id>", methods=['PUT'])
-        response = self.client.put(f"/customers/{self.customer_id}", json=payload, headers=headers)
+        response = self.client.put("/customers/", json=payload, headers=headers)
         self.assertEqual(response.status_code, 200)
 
     def test_delete_customer_with_token(self):
         token = self._login_and_get_token()
         headers = {"Authorization": f"Bearer {token}"}
         # matches @customers_bp.route("/<int:customer_id>", methods=['DELETE'])
-        response = self.client.delete(f"/customers/{self.customer_id}", headers=headers)
+        response = self.client.delete("/customers/", headers=headers)
         self.assertEqual(response.status_code, 200)
 
 
