@@ -102,7 +102,7 @@ def get_customer(customer_id):
 @token_required 
 @limiter.limit("5 per month")
 
-def update_customer(customer_id):
+def update_customer(token_customer_id, customer_id):
 
     customer = db.session.get(Customer, customer_id)
     
@@ -126,7 +126,7 @@ def update_customer(customer_id):
 @customers_bp.route("/<int:customer_id>", methods=['DELETE'])
 @token_required
 @limiter.limit("5 per day")
-def delete_customer(customer_id):
+def delete_customer(token_customer_id,customer_id):
     customer = db.session.get(Customer, customer_id)
 
     if not customer:
