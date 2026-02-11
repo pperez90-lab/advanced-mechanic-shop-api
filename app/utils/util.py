@@ -5,7 +5,7 @@ from flask import request, jsonify
 import os
 
 
-SECRET_KEY = os.environ.get('SECRET_KEY') or "super secret secrets"
+SECRET_KEY = os.environ.get('SECRET_KEY') or "super_secret_secrets_key_1234567890"
 
 def encode_token(customer_id):
     payload = {
